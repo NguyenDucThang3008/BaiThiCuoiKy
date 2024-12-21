@@ -1,66 +1,90 @@
 package Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.ktck124.lop124ltdd04.nhom03.R;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import Adapter.ProductAdapter;
+import Model.Product;
+import Model.ProductImage;
+
+
 public class HomeFragment extends Fragment {
+    private RecyclerView productRecyclerView;
+    private ProductAdapter productAdapter;
+    private List<Product> productList;
+    private List<ProductImage> productImageList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Find views using findViewById
+        productRecyclerView = view.findViewById(R.id.items);
+
+
+        productRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        productRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+
+        // Load data
+        productList = loadDataFromLayout();
+        productImageList = loadProductImages();
+
+        // Set adapter
+        productAdapter = new ProductAdapter(productList, productImageList, false);
+        productRecyclerView.setAdapter(productAdapter);
+
+        return view;
+    }
+
+    private List<Product> loadDataFromLayout() {
+        List<Product> products = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            products.add(new Product("Tên sản phẩm " + (i + 1), "M", (i + 1) * 100000));
+        }
+        return products;
+    }
+
+    private List<ProductImage> loadProductImages() {
+        List<ProductImage> productImages = new ArrayList<>();
+        int[] imageResIds = {
+//                R.drawable.image1,
+//                R.drawable.image2,
+//                R.drawable.image3,
+//                R.drawable.image4,
+//                R.drawable.image5,
+//                R.drawable.image6,
+//                R.drawable.image7,
+//                R.drawable.image8
+        };
+
+        for (int i = 0; i < imageResIds.length; i++) {
+            productImages.add(new ProductImage(i, i, String.valueOf(imageResIds[i])));
+        }
+        return productImages;
     }
 }
