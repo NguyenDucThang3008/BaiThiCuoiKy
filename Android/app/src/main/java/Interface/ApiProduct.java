@@ -1,0 +1,62 @@
+package Interface;
+
+import java.util.List;
+
+import DTO.ProductDTO;
+import DTO.ProductImageDTO;
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+public interface ApiProduct {
+    @POST("api/v1/product")
+    @Headers("Content-Type: application/json")
+    Call<String> createProduct(@Body ProductDTO productDTO);
+
+    @Multipart
+    @POST("api/v1/product/uploads/{id}")
+    Call<List<ProductImageDTO>> uploadImages(
+
+            @Path("id") Long productId,
+            @Part MultipartBody.Part[] files
+    );
+
+
+    @GET("api/v1/product")
+    @Headers("Content-Type: application/json")
+    Call<List<ProductDTO>> getProducts();
+
+    @GET("api/v1/product")
+    @Headers("Content-Type: application/json")
+    Call<List<ProductDTO>> getProducts(
+            @Query("keyword") String keyword,
+            @Query("category_id") Long categoryId);
+
+
+    @GET("api/v1/product/{id}")
+    @Headers("Content-Type: application/json")
+    Call<List<ProductDTO>> getProductById(@Path("id") int id);
+
+    @GET("api/v1/product/by-ids")
+    @Headers("Content-Type: application/json")
+    Call<List<ProductDTO>> getProductByIds(@Query("ids") String ids);
+
+    @PUT("api/v1/product/{id}")
+    @Headers("Content-Type: application/json")
+    Call<ResponseBody> updateProduct( @Path("id") int id, @Body ProductDTO productDTO);
+
+    @DELETE("api/v1/product/{id}")
+    @Headers("Content-Type: application/json")
+    Call<Void> deleteProduct( @Path("id") int id);
+}
